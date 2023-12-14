@@ -62,29 +62,7 @@ private:
 
 
 int main() {
-	/*
-	Customer c1(1);
-	Customer c2(2);
-	Customer c3(3);
-	Customer c4(4);
-	Customer c5(5);
-	Customer c6(6);
-	Customer c7(7);
-	Customer c8(8);
-	Customer c9(9);
-	Customer c10(10);
 
-	c1.TrySitting();
-	c2.TrySitting();
-	c3.TrySitting();
-	c4.TrySitting();
-	c5.TrySitting();
-	c6.TrySitting();
-	c7.TrySitting();
-	c8.TrySitting();
-	c9.TrySitting();
-	c10.TrySitting();
-	*/
 
 	Customer test;
 
