@@ -6,11 +6,14 @@ public class PriorityCustomer extends Customer
 		public PriorityCustomer(Semaphore tables,Semaphore orders,Semaphore register,Semaphore order_confirm,Semaphore meal_confirm,Semaphore register_confirm)
 		{
 			super(tables,orders,register,order_confirm,meal_confirm,register_confirm);
+			setPriority(MAX_PRIORITY);
 		}
 		@Override
 		public void run() 
 		{
+			System.out.println(threadId()+" id li thread oncelikli");
 			super.run();
+			
 			
 		}
 	}

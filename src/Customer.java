@@ -13,6 +13,7 @@ class Customer extends Thread
 		public Customer(Semaphore tables,Semaphore orders,Semaphore register,Semaphore order_confirm,Semaphore meal_confirm,Semaphore register_confirm)
 		{
 			super();
+			setPriority(MIN_PRIORITY);
 			this.tablesSemaphore=tables;
 			this.ordersSemaphore=orders;
 			this.registerSemaphore=register;
