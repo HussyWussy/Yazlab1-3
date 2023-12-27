@@ -7,13 +7,11 @@ public class PriorityCustomer extends Customer
 		{
 			super(tables,orders,register,order_confirm,meal_confirm,register_confirm);
 			setPriority(MAX_PRIORITY);
+			System.out.println(threadId()+" id li thread öncelikli olan");
 		}
 		@Override
 		public void run() 
 		{
-			System.out.println(threadId()+" id li thread oncelikli");
 			super.run();
-			
-			
 		}
 	}

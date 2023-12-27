@@ -24,7 +24,6 @@ class Customer extends Thread
 		@Override
 		public void run()
 		{
-			System.out.println(this.threadId()+"sa");
 			super.run();
 			try {
 				if(tablesSemaphore.tryAcquire(20L, TimeUnit.SECONDS))

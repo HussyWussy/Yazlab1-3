@@ -24,7 +24,7 @@ public class Waiter extends Thread
 					//müşterinin gel kral demesini bekler
 					ordersSemaphore.acquire();
 					orderConfirmSemaphore.release();
-					
+					System.out.println(threadId()+" Siparis aliyorum");
 					sleep(2000);
 					//aşçıya yap reis der
 

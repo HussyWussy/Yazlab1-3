@@ -22,10 +22,10 @@ public class Register extends Thread
 				while(true)
 				{
 					registerSemaphore.acquire();
+					System.out.println("Odeme aliyorum");
 					sleep(1000);
-
+					
 					tablesSemaphore.release();
-					ordersSemaphore.release();
 					
 					registerConfirm.release();
 					
