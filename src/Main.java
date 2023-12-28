@@ -31,7 +31,7 @@ public class Main
 			{		
 				 
 				rest.setCustomers(Interface.getCustomerCounts()[0], Interface.getCustomerCounts()[1]);
-				Interface.restaurantWindow();
+				Interface.restaurantWindow(rest.getTables(),rest.getCustomers(),rest.getPriorityCustomers(),rest.getWaiters(),rest.getChefs(),rest.getRegisters());
 				rest.start();
 				
 				

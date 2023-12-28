@@ -9,6 +9,7 @@ class Customer extends Thread
 		Semaphore mealConfirm;
 		Semaphore registerConfirm;
 		Semaphore orderConfirm;
+		String state ="";
 		
 		public Customer(Semaphore tables,Semaphore orders,Semaphore register,Semaphore order_confirm,Semaphore meal_confirm,Semaphore register_confirm)
 		{
@@ -26,10 +27,12 @@ class Customer extends Thread
 		{
 			super.run();
 			try {
+				state = "waiting";
 				if(tablesSemaphore.tryAcquire(20L, TimeUnit.SECONDS))
 				{
 					System.out.println(this.threadId()+"numarali musteri diyor ki : Oturdum da");
 					//yemek getirin da
+					state = "sitting";
 					ordersSemaphore.release();
 					orderConfirm.acquire();
 					//burda garson sipariş alıyor

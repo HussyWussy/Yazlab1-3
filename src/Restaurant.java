@@ -1,12 +1,50 @@
 import java.util.ArrayList;
-import java.util.concurrent.*;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.plaf.multi.MultiTextUI;
 
 public class Restaurant extends Thread 
-{	
+{
 	int normalCustomerCount;
 	int priorityCustomerCount;
+	
+	int TableCount = 6;
+	int WaiterCount = 3;
+	int RegisterCount = 1;
+	int ChefCount = 2;
+	
+	Semaphore Tables;
+	
+	Semaphore Orders ;
+	Semaphore RegisterSemaphore ;
+	Semaphore AwaitingOrdersSemaphore ;
+	Semaphore PaymentReadyCustomersSemaphore ;
+	Semaphore MealConfirmSemaphore ;
+	Semaphore RegisterConfirm ;
+	Semaphore OrderConfirm ;
+	
+
+	ArrayList <Customer> customers = new ArrayList<Customer>();
+	ArrayList<Waiter> waiters = new ArrayList<Waiter>();
+	ArrayList<Register> registers = new ArrayList<Register>();
+	ArrayList<Chef> chefs = new ArrayList<Chef>();
+	ArrayList <PriorityCustomer> priorityCustomers = new ArrayList<PriorityCustomer>();
+	
+	public ArrayList<Customer> getCustomers() {
+		return customers;
+	}
+	public ArrayList<Waiter> getWaiters() {
+		return waiters;
+	}
+	public ArrayList<Register> getRegisters() {
+		return registers;
+	}
+	public ArrayList<Chef> getChefs() {
+		return chefs;
+	}
+	public ArrayList<PriorityCustomer> getPriorityCustomers() {
+		return priorityCustomers;
+	}
 	public Restaurant()
 	{
 		super();
@@ -17,52 +55,47 @@ public class Restaurant extends Thread
 		this.normalCustomerCount=normalCustomerCount;
 		this.priorityCustomerCount=priorityCustomerCount;
 	}
-	public void stopRestaurant(Semaphore mutex)
-	{
-		try {
-			mutex.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 	@Override
 	public void run() {
 		super.run();
 		
-		int TableCount = 6;
 		
-		Semaphore Tables = new Semaphore(TableCount);
-		Semaphore Orders = new Semaphore(0);
-		Semaphore RegisterSemaphore = new Semaphore(0);
-		Semaphore AwaitingOrdersSemaphore = new Semaphore(0);
-		Semaphore PaymentReadyCustomersSemaphore = new Semaphore(0);
-		Semaphore MealConfirmSemaphore = new Semaphore(0);
-		Semaphore RegisterConfirm = new Semaphore(0);
-		Semaphore OrderConfirm = new Semaphore(0);
+		Tables = new Semaphore(TableCount);
+		
+		Orders = new Semaphore(0,true);
+		RegisterSemaphore = new Semaphore(0,true);
+		AwaitingOrdersSemaphore = new Semaphore(0,true);
+		PaymentReadyCustomersSemaphore = new Semaphore(0,true);
+		MealConfirmSemaphore = new Semaphore(0,true);
+		RegisterConfirm = new Semaphore(0,true);
+		OrderConfirm = new Semaphore(0,true);
 		
 
-		ArrayList <Customer> customers = new ArrayList<Customer>();
 		for(int i=0;i<normalCustomerCount;i++) 
 		{
 			customers.add(new Customer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm));
 		}
 		
-		ArrayList<Waiter> waiters = new ArrayList<Waiter>();
-		for(int i=0;i<2;i++) 
+
+		for(int i=0;i<WaiterCount;i++) 
 		{
 			waiters.add(new Waiter(Orders, AwaitingOrdersSemaphore,OrderConfirm));
 		}
 		
-		Register zaRegista = new Register(RegisterSemaphore, Tables, Orders,RegisterConfirm);
+
+		for(int i=0;i<RegisterCount;i++) 
+		{
+			registers.add(new Register(RegisterSemaphore, Tables, Orders,RegisterConfirm));
+		}
 		
-		ArrayList<Chef> chefs = new ArrayList<Chef>();
-		for(int i=0;i<2;i++) 
+
+		for(int i=0;i<ChefCount;i++) 
 		{
 			chefs.add(new Chef(AwaitingOrdersSemaphore,MealConfirmSemaphore));
 		}
 		
-		ArrayList <PriorityCustomer> priorityCustomers = new ArrayList<PriorityCustomer>();
+
 		for(int i=0;i<priorityCustomerCount;i++) 
 		{
 			priorityCustomers.add(new PriorityCustomer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm));
@@ -72,7 +105,10 @@ public class Restaurant extends Thread
 	
 		
 		//başlatmlar
-		zaRegista.start();
+		for(Register register : registers)
+		{
+			register.start();
+		}
 		for(Waiter waiter : waiters)
 		{
 			waiter.start();
@@ -111,11 +147,14 @@ public class Restaurant extends Thread
 					e.printStackTrace();
 				}
 			}
-			try {
-				zaRegista.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			for(Register register : registers)
+			{
+				try {
+					register.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			for(PriorityCustomer pcustomer : priorityCustomers)
 			{
@@ -135,5 +174,47 @@ public class Restaurant extends Thread
 					e.printStackTrace();
 				}
 			}
+	}
+	public int getNormalCustomerCount() {
+		return normalCustomerCount;
+	}
+	public int getPriorityCustomerCount() {
+		return priorityCustomerCount;
+	}
+	public int getTableCount() {
+		return TableCount;
+	}
+	public int getWaiterCount() {
+		return WaiterCount;
+	}
+	public int getRegisterCount() {
+		return RegisterCount;
+	}
+	public int getChefCount() {
+		return ChefCount;
+	}
+	public Semaphore getTables() {
+		return Tables;
+	}
+	public Semaphore getOrders() {
+		return Orders;
+	}
+	public Semaphore getRegisterSemaphore() {
+		return RegisterSemaphore;
+	}
+	public Semaphore getAwaitingOrdersSemaphore() {
+		return AwaitingOrdersSemaphore;
+	}
+	public Semaphore getPaymentReadyCustomersSemaphore() {
+		return PaymentReadyCustomersSemaphore;
+	}
+	public Semaphore getMealConfirmSemaphore() {
+		return MealConfirmSemaphore;
+	}
+	public Semaphore getRegisterConfirm() {
+		return RegisterConfirm;
+	}
+	public Semaphore getOrderConfirm() {
+		return OrderConfirm;
 	}
 }

@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.*;
 public class GUI extends JFrame
@@ -55,22 +56,17 @@ public class GUI extends JFrame
 		setVisible(true);
 		repaint();
 	}
-	public void restaurantWindow()
+	public void restaurantWindow(Semaphore tables,ArrayList <Customer> customers , ArrayList <PriorityCustomer> pcustomers , ArrayList <Waiter> waiters , ArrayList <Chef> chefs , ArrayList <Register> registers)
 	{
 		remove(customersWindowPanel);
-		
+		setSize(1600, 900);
+		setLocationRelativeTo(null);
 		setLayout(new GridLayout());
 		
-		waitersPanel=new JPanel(new FlowLayout());
-		chefsPanel=new JPanel(new FlowLayout());
-		registersPanel=new JPanel(new FlowLayout());
-		
-		waitersPanel.setBackground(Color.cyan);
-		chefsPanel.setBackground(Color.yellow);
-		registersPanel.setBackground(Color.green);
-		
-		
-		
+		waitersPanel=makeWaitersPanel(tables,customers,pcustomers,waiters);
+		chefsPanel=makeChefsPanel(chefs);
+		registersPanel=makeRegistersPanel(customers,pcustomers,registers);
+		 
 		add(waitersPanel);
 		add(chefsPanel);
 		add(registersPanel);
@@ -79,6 +75,35 @@ public class GUI extends JFrame
 		setVisible(true);
 		repaint();
 	}
+	
+	
+	
+	private JPanel makeWaitersPanel(Semaphore tables ,ArrayList <Customer> customers , ArrayList <PriorityCustomer> pcustomers , ArrayList <Waiter> waiters )
+	{
+		JPanel waitersPanel=new JPanel(new FlowLayout());
+		waitersPanel.setBackground(Color.cyan);
+		
+		
+		
+		return waitersPanel;
+	}
+	
+	private JPanel makeChefsPanel( ArrayList <Chef> chefs )
+	{
+		JPanel chefsPanel=new JPanel(new FlowLayout());
+		chefsPanel.setBackground(Color.yellow);
+		return chefsPanel;
+	}
+	
+	private JPanel makeRegistersPanel(ArrayList <Customer> customers , ArrayList <PriorityCustomer> pcustomers,ArrayList <Register> registers)
+	{
+		JPanel registersPanel=new JPanel(new FlowLayout());
+		registersPanel.setBackground(Color.green);
+		return registersPanel;
+	}
+	
+	
+	
 	
 	
 	public JButton getStartButton()
