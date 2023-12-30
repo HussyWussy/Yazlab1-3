@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -16,6 +17,7 @@ public class GUI extends JFrame
 	private JPanel chefsPanel = makeChefsPanel();
 	
 	JButton stopAndStartButton = new JButton("Durdur/Devam");
+	JButton nextButton = new JButton("Sonraki Müşteriler");
 	
 	public JPanel getWaitersPanel() {
 		return waitersPanel;
@@ -28,47 +30,84 @@ public class GUI extends JFrame
 	}
 
 
-	private JTextField normalCustomerTextField;
-	private JTextField priorityCustomerTextField;
-	private JButton startButton;
-	private JButton addButton;
+	private JTextField normalCustomerTextField = null;
+	private JTextField priorityCustomerTextField = null;
+	private JButton startButton = null;
+	private JButton addButton = null;
+	private ArrayList<int[]> customersList;
+	
+	
+	public ArrayList<int[]> getCustomersList() {
+		return customersList;
+	}
+	
 	public GUI()
 	{
 		super();
 		setVisible(true);
 		setBackground(Color.cyan);
-		setSize(500, 500);
+		setSize(600, 500);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setLayout(new FlowLayout());	
 	}
 	public void customersWindow()
 	{
+		
+		customersList = new ArrayList<int[]>();
+		
 		customersWindowPanel = new JPanel();
+		customersWindowPanel.setLayout(new BorderLayout());
+		
+		JPanel northPanel = new JPanel();
+		final JPanel southPanel = new JPanel( new GridLayout(0,1));
+		
+		customersWindowPanel.add(northPanel,BorderLayout.NORTH);
+		customersWindowPanel.add(southPanel,BorderLayout.SOUTH);
 		
 		JLabel normalCustomerLabel = new JLabel("Normal Müşteri Sayısı");
-		customersWindowPanel.add(normalCustomerLabel);
+		northPanel.add(normalCustomerLabel);
 		
 		normalCustomerTextField = new JTextField();
 		normalCustomerTextField.setText("0");
 		normalCustomerTextField.setColumns(2);
-		customersWindowPanel.add(normalCustomerTextField);
+		northPanel.add(normalCustomerTextField);
 		
 		JLabel priorityCustomerLabel = new JLabel("Öncelikli Müşteri Sayısı");
-		customersWindowPanel.add(priorityCustomerLabel);
+		northPanel.add(priorityCustomerLabel);
 		
 		priorityCustomerTextField = new JTextField();
 		priorityCustomerTextField.setText("0");
 		priorityCustomerTextField.setColumns(2);
-		customersWindowPanel.add(priorityCustomerTextField);
+		northPanel.add(priorityCustomerTextField);
 		
 		addButton = new JButton("Yeni ekle");
-		customersWindowPanel.add(addButton);
+		northPanel.add(addButton);
 		
 		startButton = new JButton("Başlat");
-		customersWindowPanel.add(startButton);
+		northPanel.add(startButton);
 		
-		
+		addButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int normalcustomer = Integer.valueOf(normalCustomerTextField.getText());
+				int prioritycustomer = Integer.valueOf(priorityCustomerTextField.getText());
+				int [] temp = {normalcustomer,prioritycustomer};
+				customersList.add(temp);
+				
+				JLabel labelShowingPrev = new JLabel(customersList.size()+" nci aşama normal müşteri : "+customersList.get(customersList.size()-1)[0] + "öncelikli müşteri : " + customersList.get(customersList.size()-1)[1]+" ");
+				southPanel.add(labelShowingPrev);
+				
+				normalCustomerTextField.setText("0");
+				priorityCustomerTextField.setText("0");
+				
+				repaint();
+				setVisible(true);
+				repaint();
+				
+			}
+		});
 		
 		add(customersWindowPanel);
 		
@@ -76,6 +115,7 @@ public class GUI extends JFrame
 		setVisible(true);
 		repaint();
 	}
+	
 	public void restaurantWindow()
 	{
 		remove(customersWindowPanel);
@@ -84,6 +124,7 @@ public class GUI extends JFrame
 		setLayout(new GridLayout());
 		
 		add(stopAndStartButton);
+		add(nextButton);
 		
 		add(waitersPanel);
 		add(chefsPanel);
@@ -96,6 +137,9 @@ public class GUI extends JFrame
 	
 	
 	
+	public JButton getNextButton() {
+		return nextButton;
+	}
 	public JButton getStopAndStartButton() {
 		return stopAndStartButton;
 	}

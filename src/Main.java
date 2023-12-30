@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.management.RuntimeMBeanException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel; 
@@ -17,19 +18,33 @@ import javax.swing.JPanel;
 public class Main
 {
 	
-	public static void main(String args[]) throws InterruptedException 
+	public static void main(String args[]) throws InterruptedException, IOException 
 	{
 		
 		File log = new File("log.txt");
-		FileWriter filewriter = null;
-		BufferedWriter bufferedwriter = null;
-		try {
-			filewriter = new FileWriter(log);
-			bufferedwriter = new BufferedWriter(filewriter);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		final FileWriter filewriter = new FileWriter(log);
+		final BufferedWriter bufferedwriter = new BufferedWriter(filewriter);
+		
+		
+		
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			public void run() {
+				try {
+					bufferedwriter.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					filewriter.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}));
+		
+		
 		//burda kullandığım semaphore sistemi çok ilkel çift taraflı gibi davranan kaliteli bir sisteme geçiş yapılması gerek
 		//bir semafor diğerinden diğer semafor da diğerinden istek istiyerek gibi çünkü altındaki kodun diğer koşul da gerçekleştiğinde çalışabilmesi acquire olması gerekiyor
 		//o zaman bütün sorunlar halloluyor ve gui zart zurt problem 2 kalıyor
@@ -40,13 +55,18 @@ public class Main
 		final Restaurant rest = new Restaurant(Interface,bufferedwriter);
 		
 		JButton stopAndStartButton = Interface.getStopAndStartButton();
+		JButton nextButton = Interface.getNextButton();
 		
-		startButton.addActionListener(new ActionListener() {
+		startButton.addActionListener(new ActionListener() 
+		{
 			public void actionPerformed(ActionEvent e) 
 			{		
 				Interface.restaurantWindow();
-				rest.setCustomers(Interface.getCustomerCounts()[0], Interface.getCustomerCounts()[1]);
+				rest.setCustomers(Interface.getCustomersList());
 				rest.start();
+				
+				
+				
 				
 				
 			}
@@ -54,9 +74,11 @@ public class Main
 			
 		});
 		
-		stopAndStartButton.addActionListener(new ActionListener() {
+		stopAndStartButton.addActionListener(new ActionListener() 
+		{
 			
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) 
+			{
 				if(!rest.paused)
 				{
 					rest.pauseAll();
@@ -70,6 +92,16 @@ public class Main
 			}
 		});
 		
+		nextButton.addActionListener(new ActionListener()
+		{
+			
+			public void actionPerformed(ActionEvent e) 
+			{
+				rest.nextCustomers();
+				
+				
+			}
+		});
 		
 		rest.join();
 		
