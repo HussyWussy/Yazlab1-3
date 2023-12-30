@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -11,6 +12,7 @@ public class PriorityCustomer extends Customer
 			setPriority(MAX_PRIORITY);
 			System.out.println(threadId()+" id li thread öncelikli olan");
 			customerButton.setBorderPainted(true);
+			customerButton.setForeground(Color.orange);
 		}
 		@Override
 		public void run() 

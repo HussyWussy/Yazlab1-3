@@ -15,6 +15,8 @@ public class GUI extends JFrame
 	private JPanel registersPanel = makeRegistersPanel();
 	private JPanel chefsPanel = makeChefsPanel();
 	
+	JButton stopAndStartButton = new JButton("Durdur/Devam");
+	
 	public JPanel getWaitersPanel() {
 		return waitersPanel;
 	}
@@ -75,7 +77,8 @@ public class GUI extends JFrame
 		setLocationRelativeTo(null);
 		setLayout(new GridLayout());
 		
-		 
+		add(stopAndStartButton);
+		
 		add(waitersPanel);
 		add(chefsPanel);
 		add(registersPanel);
@@ -87,6 +90,9 @@ public class GUI extends JFrame
 	
 	
 	
+	public JButton getStopAndStartButton() {
+		return stopAndStartButton;
+	}
 	private JPanel makeWaitersPanel()
 	{
 		JPanel waitersPanel=new JPanel();

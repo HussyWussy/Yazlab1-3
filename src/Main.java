@@ -25,7 +25,9 @@ public class Main
 		Interface.customersWindow();
 		JButton startButton = Interface.getStartButton();
 		final Restaurant rest = new Restaurant(Interface);
-
+		
+		JButton stopAndStartButton = Interface.getStopAndStartButton();
+		
 		startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{		
@@ -37,6 +39,22 @@ public class Main
 			}
 				
 			
+		});
+		
+		stopAndStartButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				if(!rest.paused)
+				{
+					rest.pauseAll();
+				}
+				else if(rest.paused)
+				{
+					rest.resumeAll();
+				}
+				
+				
+			}
 		});
 		
 		

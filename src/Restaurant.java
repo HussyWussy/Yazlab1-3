@@ -13,6 +13,7 @@ public class Restaurant extends Thread
 	int WaiterCount = 3;
 	int RegisterCount = 1;
 	int ChefCount = 2;
+	boolean paused = false;
 	
 	Semaphore Tables;
 	
@@ -65,7 +66,61 @@ public class Restaurant extends Thread
 		this.normalCustomerCount=normalCustomerCount;
 		this.priorityCustomerCount=priorityCustomerCount;
 	}
-
+	
+	void pauseAll()
+	{
+		
+		for(Customer c : customers)
+		{
+			c.suspend();
+		}
+		for(PriorityCustomer pc : priorityCustomers)
+		{
+			pc.suspend();
+		}
+		for(Waiter w : waiters)
+		{
+			w.suspend();
+		}
+		for(Register r : registers)
+		{
+			r.suspend();
+		}
+		for(Chef cf : chefs)
+		{
+			cf.stopCooking();
+			cf.suspend();
+		}
+		paused=true;
+	}
+	
+	void resumeAll()
+	{
+		
+		for(Customer c : customers)
+		{
+			c.resume();
+		}
+		for(PriorityCustomer pc : priorityCustomers)
+		{
+			pc.resume();
+		}
+		for(Waiter w : waiters)
+		{
+			w.resume();
+		}
+		for(Register r : registers)
+		{
+			r.resume();
+		}
+		for(Chef cf : chefs)
+		{
+			cf.resume();
+			cf.startCooking();
+		}
+		paused=false;
+	}
+	
 	@Override
 	public void run() {
 		super.run();
