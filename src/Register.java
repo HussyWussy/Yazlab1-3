@@ -1,18 +1,27 @@
 import java.util.concurrent.Semaphore;
 
+import javax.swing.JPanel;
+
 public class Register extends Thread 
 	{
 		Semaphore registerSemaphore;
 		Semaphore tablesSemaphore;
 		Semaphore ordersSemaphore;
 		Semaphore registerConfirm;
-		public Register(Semaphore register,Semaphore tables,Semaphore orders,Semaphore register_confirm)
+		
+		JPanel waitersPanel;
+		JPanel chefsPanel;
+		JPanel registersPanel;
+		public Register(Semaphore register,Semaphore tables,Semaphore orders,Semaphore register_confirm,GUI Interface)
 		{
 			super();
 			this.registerSemaphore=register;
 			this.tablesSemaphore=tables;
 			this.ordersSemaphore=orders;
 			this.registerConfirm=register_confirm;
+			this.waitersPanel=Interface.getWaitersPanel();
+			this.chefsPanel=chefsPanel;
+			this.registersPanel=registersPanel;
 		}
 		@Override
 		public void run() 

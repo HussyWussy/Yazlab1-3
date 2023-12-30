@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
+import javax.swing.JPanel;
 import javax.swing.plaf.multi.MultiTextUI;
 
 public class Restaurant extends Thread 
@@ -22,7 +23,12 @@ public class Restaurant extends Thread
 	Semaphore MealConfirmSemaphore ;
 	Semaphore RegisterConfirm ;
 	Semaphore OrderConfirm ;
+	Semaphore GotOrder;
 	
+	JPanel waitersPanel;
+	JPanel chefsPanel;
+	JPanel registersPanel;
+	GUI Interface;
 
 	ArrayList <Customer> customers = new ArrayList<Customer>();
 	ArrayList<Waiter> waiters = new ArrayList<Waiter>();
@@ -45,9 +51,13 @@ public class Restaurant extends Thread
 	public ArrayList<PriorityCustomer> getPriorityCustomers() {
 		return priorityCustomers;
 	}
-	public Restaurant()
+	public Restaurant(GUI Interface)
 	{
 		super();
+		this.waitersPanel=Interface.getWaitersPanel();
+		this.chefsPanel=Interface.getChefsPanel();
+		this.registersPanel=Interface.getRegistersPanel();
+		this.Interface=Interface;
 		
 	}
 	void setCustomers(int normalCustomerCount,int priorityCustomerCount)
@@ -70,35 +80,36 @@ public class Restaurant extends Thread
 		MealConfirmSemaphore = new Semaphore(0,true);
 		RegisterConfirm = new Semaphore(0,true);
 		OrderConfirm = new Semaphore(0,true);
+		GotOrder = new Semaphore(0,true);
 		
 
 		for(int i=0;i<normalCustomerCount;i++) 
 		{
-			customers.add(new Customer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm));
+			customers.add(new Customer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm,GotOrder,Interface));
 		}
 		
 
 		for(int i=0;i<WaiterCount;i++) 
 		{
-			waiters.add(new Waiter(Orders, AwaitingOrdersSemaphore,OrderConfirm));
+			waiters.add(new Waiter(Orders, AwaitingOrdersSemaphore,OrderConfirm,GotOrder,Interface));
 		}
 		
 
 		for(int i=0;i<RegisterCount;i++) 
 		{
-			registers.add(new Register(RegisterSemaphore, Tables, Orders,RegisterConfirm));
+			registers.add(new Register(RegisterSemaphore, Tables, Orders,RegisterConfirm,Interface));
 		}
 		
 
 		for(int i=0;i<ChefCount;i++) 
 		{
-			chefs.add(new Chef(AwaitingOrdersSemaphore,MealConfirmSemaphore));
+			chefs.add(new Chef(AwaitingOrdersSemaphore,MealConfirmSemaphore,Interface));
 		}
 		
 
 		for(int i=0;i<priorityCustomerCount;i++) 
 		{
-			priorityCustomers.add(new PriorityCustomer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm));
+			priorityCustomers.add(new PriorityCustomer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm,GotOrder,Interface));
 		}
 		
 		

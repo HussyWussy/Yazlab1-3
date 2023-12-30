@@ -10,10 +10,22 @@ import javax.swing.*;
 public class GUI extends JFrame
 {
 	private JPanel customersWindowPanel;
-	private JPanel waitersPanel;
-	private JPanel registersPanel;
-	private JPanel chefsPanel;
 	
+	private JPanel waitersPanel = makeWaitersPanel();
+	private JPanel registersPanel = makeRegistersPanel();
+	private JPanel chefsPanel = makeChefsPanel();
+	
+	public JPanel getWaitersPanel() {
+		return waitersPanel;
+	}
+	public JPanel getRegistersPanel() {
+		return registersPanel;
+	}
+	public JPanel getChefsPanel() {
+		return chefsPanel;
+	}
+
+
 	private JTextField normalCustomerTextField;
 	private JTextField priorityCustomerTextField;
 	private JButton startButton;
@@ -56,16 +68,13 @@ public class GUI extends JFrame
 		setVisible(true);
 		repaint();
 	}
-	public void restaurantWindow(Semaphore tables,ArrayList <Customer> customers , ArrayList <PriorityCustomer> pcustomers , ArrayList <Waiter> waiters , ArrayList <Chef> chefs , ArrayList <Register> registers)
+	public void restaurantWindow()
 	{
 		remove(customersWindowPanel);
 		setSize(1600, 900);
 		setLocationRelativeTo(null);
 		setLayout(new GridLayout());
 		
-		waitersPanel=makeWaitersPanel(tables,customers,pcustomers,waiters);
-		chefsPanel=makeChefsPanel(chefs);
-		registersPanel=makeRegistersPanel(customers,pcustomers,registers);
 		 
 		add(waitersPanel);
 		add(chefsPanel);
@@ -78,9 +87,9 @@ public class GUI extends JFrame
 	
 	
 	
-	private JPanel makeWaitersPanel(Semaphore tables ,ArrayList <Customer> customers , ArrayList <PriorityCustomer> pcustomers , ArrayList <Waiter> waiters )
+	private JPanel makeWaitersPanel()
 	{
-		JPanel waitersPanel=new JPanel(new FlowLayout());
+		JPanel waitersPanel=new JPanel();
 		waitersPanel.setBackground(Color.cyan);
 		
 		
@@ -88,14 +97,14 @@ public class GUI extends JFrame
 		return waitersPanel;
 	}
 	
-	private JPanel makeChefsPanel( ArrayList <Chef> chefs )
+	private JPanel makeChefsPanel( )
 	{
 		JPanel chefsPanel=new JPanel(new FlowLayout());
 		chefsPanel.setBackground(Color.yellow);
 		return chefsPanel;
 	}
 	
-	private JPanel makeRegistersPanel(ArrayList <Customer> customers , ArrayList <PriorityCustomer> pcustomers,ArrayList <Register> registers)
+	private JPanel makeRegistersPanel()
 	{
 		JPanel registersPanel=new JPanel(new FlowLayout());
 		registersPanel.setBackground(Color.green);

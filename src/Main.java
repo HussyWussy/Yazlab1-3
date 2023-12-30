@@ -24,14 +24,13 @@ public class Main
 		final GUI Interface = new GUI();
 		Interface.customersWindow();
 		JButton startButton = Interface.getStartButton();
-		final Restaurant rest = new Restaurant();
+		final Restaurant rest = new Restaurant(Interface);
 
 		startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{		
-				 
+				Interface.restaurantWindow();
 				rest.setCustomers(Interface.getCustomerCounts()[0], Interface.getCustomerCounts()[1]);
-				Interface.restaurantWindow(rest.getTables(),rest.getCustomers(),rest.getPriorityCustomers(),rest.getWaiters(),rest.getChefs(),rest.getRegisters());
 				rest.start();
 				
 				
