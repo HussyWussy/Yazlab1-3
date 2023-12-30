@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.BufferedWriter;
+import java.io.Console;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
@@ -18,6 +19,7 @@ class Customer extends Thread
 		Semaphore registerConfirm;
 		Semaphore orderConfirm;
 		Semaphore gotOrder;
+		Semaphore PrioritySemaphore;
 		
 		String state ="";
 		JButton customerButton ;
@@ -27,7 +29,7 @@ class Customer extends Thread
 		JPanel registersPanel;
 		GUI Interface;
 		BufferedWriter filewriter;
-		public Customer(Semaphore tables,Semaphore orders,Semaphore register,Semaphore order_confirm,Semaphore meal_confirm,Semaphore register_confirm,Semaphore gotOrder ,GUI Interface,BufferedWriter filewriter)
+		public Customer(Semaphore tables,Semaphore orders,Semaphore register,Semaphore order_confirm,Semaphore meal_confirm,Semaphore register_confirm,Semaphore gotOrder ,GUI Interface,BufferedWriter filewriter,Semaphore PrioritySemaphore)
 		{
 			super();
 			setPriority(MIN_PRIORITY);
@@ -38,6 +40,7 @@ class Customer extends Thread
 			this.orderConfirm=order_confirm;
 			this.registerConfirm=register_confirm;
 			this.gotOrder=gotOrder;
+			this.PrioritySemaphore=PrioritySemaphore;
 			
 			this.filewriter = filewriter;
 			
@@ -57,10 +60,28 @@ class Customer extends Thread
 				state = threadId()+"beklemede";
 				customerButton.setText(state);
 				waitersPanel.add(customerButton);
-				
+				if(PrioritySemaphore.availablePermits()>0) {
+					if(!(this instanceof PriorityCustomer))
+					{
+						while(true)
+						{
+							if(PrioritySemaphore.availablePermits()==0)
+							{
+								break;
+							}
+						
+						}
+					}
+						
+					
+				}
 				if(tablesSemaphore.tryAcquire(20L, TimeUnit.SECONDS))
 				{
 					
+					if(this instanceof PriorityCustomer)
+					{
+						PrioritySemaphore.acquire();
+					}
 					
 					//garson bekliyor
 					customerButton.setBackground(Color.blue);

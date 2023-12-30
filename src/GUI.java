@@ -31,6 +31,7 @@ public class GUI extends JFrame
 	private JTextField normalCustomerTextField;
 	private JTextField priorityCustomerTextField;
 	private JButton startButton;
+	private JButton addButton;
 	public GUI()
 	{
 		super();
@@ -61,8 +62,13 @@ public class GUI extends JFrame
 		priorityCustomerTextField.setColumns(2);
 		customersWindowPanel.add(priorityCustomerTextField);
 		
+		addButton = new JButton("Yeni ekle");
+		customersWindowPanel.add(addButton);
+		
 		startButton = new JButton("Başlat");
 		customersWindowPanel.add(startButton);
+		
+		
 		
 		add(customersWindowPanel);
 		

@@ -28,6 +28,7 @@ public class Restaurant extends Thread
 	Semaphore RegisterConfirm ;
 	Semaphore OrderConfirm ;
 	Semaphore GotOrder;
+	Semaphore PrioritySemaphore;
 	
 	
 	
@@ -144,11 +145,18 @@ public class Restaurant extends Thread
 		RegisterConfirm = new Semaphore(0,true);
 		OrderConfirm = new Semaphore(0,true);
 		GotOrder = new Semaphore(0,true);
+		PrioritySemaphore = new Semaphore(0,true);
 		
-
+		
+		
+		for(int i=0;i<priorityCustomerCount;i++) 
+		{
+			priorityCustomers.add(new PriorityCustomer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm,GotOrder,Interface,filewriter,PrioritySemaphore));
+		}
+		
 		for(int i=0;i<normalCustomerCount;i++) 
 		{
-			customers.add(new Customer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm,GotOrder,Interface,filewriter));
+			customers.add(new Customer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm,GotOrder,Interface,filewriter,PrioritySemaphore));
 		}
 		
 
@@ -170,15 +178,21 @@ public class Restaurant extends Thread
 		}
 		
 
-		for(int i=0;i<priorityCustomerCount;i++) 
-		{
-			priorityCustomers.add(new PriorityCustomer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm,GotOrder,Interface,filewriter));
-		}
+		
 		
 		
 	
 		
 		//başlatmlar
+		//öncelikli müştereileri normal müşterilerden önce start yapmak hangisinin daha önce başlamasını belirlemek içn yeterli gibi öncelik de içne yazdım ama o çok farketmyo sanırım
+		for(PriorityCustomer pcustomer : priorityCustomers)
+		{
+			pcustomer.start();
+		}
+		for(Customer customer : customers)
+		{
+			customer.start();
+		}
 		for(Register register : registers)
 		{
 			register.start();
@@ -191,15 +205,8 @@ public class Restaurant extends Thread
 		{
 			chef.start();
 		}
-		//öncelikli müştereileri normal müşterilerden önce start yapmak hangisinin daha önce başlamasını belirlemek içn yeterli gibi öncelik de içne yazdım ama o çok farketmyo sanırım
-		for(PriorityCustomer pcustomer : priorityCustomers)
-		{
-			pcustomer.start();
-		}
-		for(Customer customer : customers)
-		{
-			customer.start();
-		}
+		
+		
 		
 		//birleştirmeler
 			for(PriorityCustomer pcustomer : priorityCustomers)
