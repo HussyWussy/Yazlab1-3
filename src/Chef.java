@@ -1,4 +1,7 @@
 import java.awt.Color;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -22,8 +25,9 @@ public class Chef extends Thread
 		
 		private int slotCount = 2;
 	
+		BufferedWriter filewriter;
 		
-		public Chef(Semaphore awaiting_orders_semaphore,Semaphore meal_confirm,GUI Interface) 
+		public Chef(Semaphore awaiting_orders_semaphore,Semaphore meal_confirm,GUI Interface , BufferedWriter filewriter) 
 		{
 			super();
 			this.awaitingOrdersSemaphore=awaiting_orders_semaphore;
@@ -34,12 +38,14 @@ public class Chef extends Thread
 			this.registersPanel=Interface.getRegistersPanel();
 			this.Interface=Interface;
 			
+			this.filewriter = filewriter;
+			
 			for(int i = 0;i<slotCount;i++)
 			{
 				JButton cookingButton = new JButton();
 				cookingslotButtons.add(cookingButton);
 				
-				CookingSlot cslot = new CookingSlot(currentlyCookingSemaphore,awaiting_orders_semaphore, meal_confirm, cookingButton);
+				CookingSlot cslot = new CookingSlot(currentlyCookingSemaphore,awaiting_orders_semaphore, meal_confirm, cookingButton,threadId());
 				
 				cookingslots.add(cslot);
 				
@@ -63,14 +69,15 @@ public class Chef extends Thread
 			Semaphore awaitingOrdersSemaphore;
 			Semaphore mealConfirm;
 			JButton cookingslotbutton;
-			public CookingSlot(Semaphore currently_cooking,Semaphore awaiting_orders,Semaphore meal_confirm,JButton cookingButton)
+			long parentThreadId;
+			public CookingSlot(Semaphore currently_cooking,Semaphore awaiting_orders,Semaphore meal_confirm,JButton cookingButton,long parentThreadId)
 			{
 				super();
 				currentlyCookingSemaphore = currently_cooking;
 				this.awaitingOrdersSemaphore=awaiting_orders;
 				this.mealConfirm=meal_confirm;
 				this.cookingslotbutton=cookingButton;
-				
+				this.parentThreadId = parentThreadId;
 				
 			}
 			@Override
@@ -85,6 +92,13 @@ public class Chef extends Thread
 						
 						cookingslotbutton.setBackground(Color.green);
 						
+						try {
+							filewriter.write(parentThreadId + "li aşçının" + this.threadId()+" id li ocakta yemek pişiyor ");
+							filewriter.newLine();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						
 						sleep(3000);
 						
@@ -146,7 +160,7 @@ public class Chef extends Thread
 						
 						JButton cookingButton = cookingslotButtons.get(i);
 						
-						CookingSlot cslot = new CookingSlot(currentlyCookingSemaphore,awaitingOrdersSemaphore, mealConfirm, cookingButton);
+						CookingSlot cslot = new CookingSlot(currentlyCookingSemaphore,awaitingOrdersSemaphore, mealConfirm, cookingButton , threadId());
 						
 						cookingslots.add(cslot);
 						

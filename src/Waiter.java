@@ -1,4 +1,10 @@
+import java.awt.Color;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.InterfaceAddress;
 import java.util.concurrent.Semaphore;
+import javax.swing.JButton;
 
 import javax.swing.JPanel;
 
@@ -13,8 +19,11 @@ public class Waiter extends Thread
 		JPanel chefsPanel;
 		JPanel registersPanel;
 		
+		JButton waiterButton = new JButton();
 		
-		public Waiter(Semaphore orders,Semaphore awaiting_orders,Semaphore order_confirm,Semaphore gotOrder,GUI Interface)
+		BufferedWriter filewriter;
+		
+		public Waiter(Semaphore orders,Semaphore awaiting_orders,Semaphore order_confirm,Semaphore gotOrder,GUI Interface,BufferedWriter filewriter)
 		{
 			super();
 			this.ordersSemaphore=orders;
@@ -22,9 +31,17 @@ public class Waiter extends Thread
 			this.orderConfirmSemaphore=order_confirm;
 			this.gotOrder=gotOrder;
 			
+			
 			this.waitersPanel=Interface.getWaitersPanel();
 			this.chefsPanel=Interface.getChefsPanel();
 			this.registersPanel=Interface.getRegistersPanel();
+			
+			this.filewriter = filewriter;
+			
+			waitersPanel.add(waiterButton);
+			Interface.repaint();
+			Interface.setVisible(true);
+			Interface.repaint();
 			
 			
 		}
@@ -32,18 +49,35 @@ public class Waiter extends Thread
 		public void run() 
 		{
 			super.run();
+			
+			waiterButton.setText(String.valueOf(currentThread().threadId()) + "id li Garson");
+			
+			
 			try 
 			{
 				while(true)
 				{
 					//müşterinin gel kral demesini bekler
+					waiterButton.setBackground(Color.gray);
+					
 					ordersSemaphore.acquire();
 					orderConfirmSemaphore.release();
 					System.out.println(threadId()+" Siparis aliyorum");
+					try {
+						filewriter.write(this.threadId()+"garson kasa diyor ki : Siparis aliyorum");
+						filewriter.newLine();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					waiterButton.setBackground(Color.green);
 					sleep(2000);
+					
 					//aşçıya yap reis der
 					gotOrder.release();
 					awaitingOrdersSemaphore.release();
+					waiterButton.setBackground(Color.gray);
 				}
 				
 

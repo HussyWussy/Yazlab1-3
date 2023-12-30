@@ -1,5 +1,8 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 
 import javax.swing.JPanel;
 import javax.swing.plaf.multi.MultiTextUI;
@@ -25,6 +28,8 @@ public class Restaurant extends Thread
 	Semaphore RegisterConfirm ;
 	Semaphore OrderConfirm ;
 	Semaphore GotOrder;
+	
+	
 	
 	JPanel waitersPanel;
 	JPanel chefsPanel;
@@ -52,14 +57,17 @@ public class Restaurant extends Thread
 	public ArrayList<PriorityCustomer> getPriorityCustomers() {
 		return priorityCustomers;
 	}
-	public Restaurant(GUI Interface)
+	
+	BufferedWriter filewriter;
+	
+	public Restaurant(GUI Interface,BufferedWriter filewriter)
 	{
 		super();
 		this.waitersPanel=Interface.getWaitersPanel();
 		this.chefsPanel=Interface.getChefsPanel();
 		this.registersPanel=Interface.getRegistersPanel();
 		this.Interface=Interface;
-		
+		this.filewriter = filewriter;
 	}
 	void setCustomers(int normalCustomerCount,int priorityCustomerCount)
 	{
@@ -140,31 +148,31 @@ public class Restaurant extends Thread
 
 		for(int i=0;i<normalCustomerCount;i++) 
 		{
-			customers.add(new Customer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm,GotOrder,Interface));
+			customers.add(new Customer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm,GotOrder,Interface,filewriter));
 		}
 		
 
 		for(int i=0;i<WaiterCount;i++) 
 		{
-			waiters.add(new Waiter(Orders, AwaitingOrdersSemaphore,OrderConfirm,GotOrder,Interface));
+			waiters.add(new Waiter(Orders, AwaitingOrdersSemaphore,OrderConfirm,GotOrder,Interface,filewriter));
 		}
 		
 
 		for(int i=0;i<RegisterCount;i++) 
 		{
-			registers.add(new Register(RegisterSemaphore, Tables, Orders,RegisterConfirm,Interface));
+			registers.add(new Register(RegisterSemaphore, Tables, Orders,RegisterConfirm,Interface,filewriter));
 		}
 		
 
 		for(int i=0;i<ChefCount;i++) 
 		{
-			chefs.add(new Chef(AwaitingOrdersSemaphore,MealConfirmSemaphore,Interface));
+			chefs.add(new Chef(AwaitingOrdersSemaphore,MealConfirmSemaphore,Interface,filewriter));
 		}
 		
 
 		for(int i=0;i<priorityCustomerCount;i++) 
 		{
-			priorityCustomers.add(new PriorityCustomer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm,GotOrder,Interface));
+			priorityCustomers.add(new PriorityCustomer(Tables, Orders,RegisterSemaphore,OrderConfirm,MealConfirmSemaphore,RegisterConfirm,GotOrder,Interface,filewriter));
 		}
 		
 		
@@ -194,7 +202,31 @@ public class Restaurant extends Thread
 		}
 		
 		//birleştirmeler
-		
+			for(PriorityCustomer pcustomer : priorityCustomers)
+			{
+				try {
+					pcustomer.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			for(Customer customer : customers)
+			{
+				try {
+					customer.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			try {
+				filewriter.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			for(Waiter waiter : waiters)
 			{
 				try {
@@ -222,24 +254,7 @@ public class Restaurant extends Thread
 					e.printStackTrace();
 				}
 			}
-			for(PriorityCustomer pcustomer : priorityCustomers)
-			{
-				try {
-					pcustomer.join();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			for(Customer customer : customers)
-			{
-				try {
-					customer.join();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			
 	}
 	public int getNormalCustomerCount() {
 		return normalCustomerCount;
