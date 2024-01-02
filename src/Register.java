@@ -63,6 +63,14 @@ public class Register extends Thread
 					registerButton.setBackground(Color.green);
 					sleep(1000);
 					
+					try {
+						filewriter.write(this.threadId()+"numarali kasa diyor ki : Odeme aldim");
+						filewriter.newLine();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 					tablesSemaphore.release();
 					
 					registerConfirm.release();

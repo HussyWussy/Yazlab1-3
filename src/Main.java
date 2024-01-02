@@ -54,8 +54,11 @@ public class Main
 		JButton startButton = Interface.getStartButton();
 		final Restaurant rest = new Restaurant(Interface,bufferedwriter);
 		
+		final Calculator calc = new Calculator();
+		
 		JButton stopAndStartButton = Interface.getStopAndStartButton();
 		JButton nextButton = Interface.getNextButton();
+		JButton calculateButton = Interface.getCalculateButton();
 		
 		startButton.addActionListener(new ActionListener() 
 		{
@@ -102,6 +105,16 @@ public class Main
 				
 			}
 		});
+		
+		calculateButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				calc.calculateEarning(Integer.valueOf(Interface.getCalcTimeTF().getText()), Integer.valueOf(Interface.getCalcCustomerTimeTF().getText()), Integer.valueOf(Interface.getCalcCustomersTF().getText()), Integer.valueOf(Interface.getCalcPriorityCustomersTF().getText()));
+				System.out.println("Kazanc = "+calc.getEarnings()+"  Masa = "+calc.getTableCount()+"  Garson = "+calc.getWaiterCount()+"  Asci = "+calc.getChefCount());
+			}
+		});
+		
+		
 		
 		rest.join();
 		

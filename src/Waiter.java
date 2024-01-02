@@ -74,6 +74,14 @@ public class Waiter extends Thread
 					waiterButton.setBackground(Color.green);
 					sleep(2000);
 					
+					try {
+						filewriter.write(this.threadId()+"garson kasa diyor ki : Siparis aldim");
+						filewriter.newLine();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 					//aşçıya yap reis der
 					gotOrder.release();
 					awaitingOrdersSemaphore.release();

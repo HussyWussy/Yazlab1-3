@@ -32,6 +32,13 @@ public class GUI extends JFrame
 
 	private JTextField normalCustomerTextField = null;
 	private JTextField priorityCustomerTextField = null;
+	
+	private JTextField calcCustomersTF = null;
+	private JTextField calcCustomerTimeTF = null;
+	private JTextField calcPriorityCustomersTF = null;
+	private JTextField calcTimeTF = null;
+	private JButton calculateButton = null;
+	
 	private JButton startButton = null;
 	private JButton addButton = null;
 	private ArrayList<int[]> customersList;
@@ -63,7 +70,7 @@ public class GUI extends JFrame
 		final JPanel southPanel = new JPanel( new GridLayout(0,1));
 		
 		customersWindowPanel.add(northPanel,BorderLayout.NORTH);
-		customersWindowPanel.add(southPanel,BorderLayout.SOUTH);
+		customersWindowPanel.add(southPanel,BorderLayout.CENTER);
 		
 		JLabel normalCustomerLabel = new JLabel("Normal Müşteri Sayısı");
 		northPanel.add(normalCustomerLabel);
@@ -108,6 +115,50 @@ public class GUI extends JFrame
 				
 			}
 		});
+		
+		JPanel calcEarningsPanel = new JPanel();
+		customersWindowPanel.add(calcEarningsPanel,BorderLayout.SOUTH);
+		
+		
+		calcCustomersTF = new JTextField();
+		calcCustomerTimeTF = new JTextField();
+		calcPriorityCustomersTF = new JTextField();
+		calcTimeTF = new JTextField();
+		
+		calcCustomersTF.setText("0");
+		calcCustomerTimeTF.setText("0");
+		calcPriorityCustomersTF.setText("0");
+		calcTimeTF.setText("0");
+		
+		calcCustomersTF.setColumns(2);
+		calcCustomerTimeTF.setColumns(2);
+		calcPriorityCustomersTF.setColumns(2);
+		calcTimeTF.setColumns(2);
+		
+		calculateButton = new JButton("Hesapla");
+		
+		
+		calcEarningsPanel.add(calcCustomerTimeTF);
+		JLabel custtime= new JLabel("Kadar saniyede");
+		calcEarningsPanel.add(custtime);
+		
+		calcEarningsPanel.add(calcCustomersTF);
+		JLabel custcount = new JLabel("Kadar Müşteri");
+		calcEarningsPanel.add(custcount);
+		
+		calcEarningsPanel.add(calcPriorityCustomersTF);
+		JLabel pricount = new JLabel("Kadarı öncelikli");
+		calcEarningsPanel.add(pricount);
+		
+		
+		calcEarningsPanel.add(calcTimeTF);
+		JLabel timelabel = new JLabel("Kadar boyunca");
+		calcEarningsPanel.add(timelabel);
+		
+		calcEarningsPanel.add(calculateButton);
+		
+		
+		
 		
 		add(customersWindowPanel);
 		
@@ -185,6 +236,21 @@ public class GUI extends JFrame
 		int [] returnable = {normalCustomerCount,priorityCustomerCount};
 		
 		return returnable;
+	}
+	public JButton getCalculateButton() {
+		return calculateButton;
+	}
+	public JTextField getCalcCustomersTF() {
+		return calcCustomersTF;
+	}
+	public JTextField getCalcCustomerTimeTF() {
+		return calcCustomerTimeTF;
+	}
+	public JTextField getCalcPriorityCustomersTF() {
+		return calcPriorityCustomersTF;
+	}
+	public JTextField getCalcTimeTF() {
+		return calcTimeTF;
 	}
 	
 }

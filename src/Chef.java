@@ -101,6 +101,13 @@ public class Chef extends Thread
 						}
 						
 						sleep(3000);
+						try {
+							filewriter.write(parentThreadId + "li aşçının" + this.threadId()+" id li ocakta yemek pişti ");
+							filewriter.newLine();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						
 						cookingslotbutton.setBackground(Color.gray);
 						
