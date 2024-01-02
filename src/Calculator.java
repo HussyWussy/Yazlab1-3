@@ -59,7 +59,7 @@ public class Calculator
 		}
 		void getOrder(int currentTime)
 		{
-			if(waiterCount>0 && !waiting &&sitting)
+			if(waiterCount>0 && !waiting && sitting)
 			{
 				waiterCount--;
 				waiting=true;
@@ -112,6 +112,7 @@ public class Calculator
 			if(paying && time+1<=currentTime) {
 				registerCount++;
 				tableCount++;
+				time = currentTime;
 				return true;
 			}
 			else
@@ -134,59 +135,52 @@ public class Calculator
 		waiterCount =  1;
 		chefCount = 1;
 		
+		int besttablecount = 1;
+		int bestwaitercount = 1;
+		double bestchefcount = 1;
+		
 		earnings=emulate();
-		int lastEarning = earnings;
+		
+		
 		System.out.println(earnings + "  "+ tableCount+ "  " +chefCount +"  " +waiterCount +" "+ registerCount);
-	
-		while(true)
+		for(int i=1;i<Math.ceil((Time*customerCount/customerTime+1)/2)+1;i++)
 		{
-			tableCount++;
-			int lastTableEarning=emulate();
-			if(lastTableEarning < earnings ) {
-				tableCount--;
-				break;
+			tableCount = i;
+			int tableEarn = emulate();
+			if(tableEarn >= earnings) {
+				earnings = tableEarn;
+				besttablecount = tableCount;
+				bestwaitercount = waiterCount;
+				bestchefcount = chefCount;
 			}
-			else{
-				earnings=lastTableEarning;
-				while(true)
+			for(int j = 1;j<i+1;j++)
+			{
+				waiterCount = j;
+				int waiterEarn= emulate();
+				if(waiterEarn >= earnings) {
+					earnings = waiterEarn;
+					besttablecount = tableCount;
+					bestwaitercount = waiterCount;
+					bestchefcount = chefCount;
+				}
+				
+				for(int k = 1;k<Math.ceil(i/2)+1;k++)
 				{
-					waiterCount++;
-					int lastWaiterEarning=emulate();
-					if(lastWaiterEarning < earnings ) {
-						waiterCount--;
-						break;
+					chefCount = k;
+					int chefEarn = emulate();
+					if(chefEarn >= earnings) {
+						earnings = chefEarn;
+						besttablecount = tableCount;
+						bestwaitercount = waiterCount;
+						bestchefcount = chefCount;
 					}
-					else{
-						earnings=lastWaiterEarning;
-						
-						while(true)
-						{
-							chefCount++;
-							int lastChefEarning=emulate();
-							if(lastChefEarning < earnings ) {
-								chefCount--;
-								break;
-							}
-							else{
-								earnings=lastChefEarning;
-								
-							}
-						}
-					}
-						
-					
 				}
 			}
-			
 		}
-		lastEarning=earnings;
 		
-		lastEarning=earnings;
-		
-		
-		
-		
-
+		tableCount=besttablecount;
+		waiterCount=bestwaitercount;
+		chefCount=bestchefcount;
 	}
 	
 	private int emulate()
@@ -207,6 +201,10 @@ public class Calculator
 					customers.add(new calcCustomer(i));
 				}
 			}
+			
+			
+			
+			
 			
 			Iterator<calcCustomer> itr = customers.iterator();
 			while(itr.hasNext())
@@ -259,7 +257,7 @@ public class Calculator
 		waiterCount=tempWait;
 		registerCount=tempregi;
 		
-		System.out.println(earn);
+		
 		return (int) (earn - (tableCount + chefCount + waiterCount));
 	}
 	
