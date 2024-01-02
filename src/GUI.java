@@ -37,6 +37,7 @@ public class GUI extends JFrame
 	private JTextField calcCustomerTimeTF = null;
 	private JTextField calcPriorityCustomersTF = null;
 	private JTextField calcTimeTF = null;
+	private JLabel calcResult = null;
 	private JButton calculateButton = null;
 	
 	private JButton startButton = null;
@@ -44,6 +45,9 @@ public class GUI extends JFrame
 	private ArrayList<int[]> customersList;
 	
 	
+	public void setCalcResultText(String text) {
+		calcResult.setText(text);
+	}
 	public ArrayList<int[]> getCustomersList() {
 		return customersList;
 	}
@@ -116,9 +120,10 @@ public class GUI extends JFrame
 			}
 		});
 		
-		JPanel calcEarningsPanel = new JPanel();
+		JPanel calcEarningsPanel = new JPanel(new BorderLayout());
 		customersWindowPanel.add(calcEarningsPanel,BorderLayout.SOUTH);
 		
+		JPanel calcPanel = new JPanel();
 		
 		calcCustomersTF = new JTextField();
 		calcCustomerTimeTF = new JTextField();
@@ -138,29 +143,37 @@ public class GUI extends JFrame
 		calculateButton = new JButton("Hesapla");
 		
 		
-		calcEarningsPanel.add(calcCustomerTimeTF);
+		calcPanel.add(calcCustomerTimeTF);
 		JLabel custtime= new JLabel("Kadar saniyede");
-		calcEarningsPanel.add(custtime);
+		calcPanel.add(custtime);
 		
-		calcEarningsPanel.add(calcCustomersTF);
+		calcPanel.add(calcCustomersTF);
 		JLabel custcount = new JLabel("Kadar Müşteri");
-		calcEarningsPanel.add(custcount);
+		calcPanel.add(custcount);
 		
-		calcEarningsPanel.add(calcPriorityCustomersTF);
+		calcPanel.add(calcPriorityCustomersTF);
 		JLabel pricount = new JLabel("Kadarı öncelikli");
-		calcEarningsPanel.add(pricount);
+		calcPanel.add(pricount);
 		
 		
-		calcEarningsPanel.add(calcTimeTF);
+		calcPanel.add(calcTimeTF);
 		JLabel timelabel = new JLabel("Kadar boyunca");
-		calcEarningsPanel.add(timelabel);
+		calcPanel.add(timelabel);
 		
-		calcEarningsPanel.add(calculateButton);
+		calcPanel.add(calculateButton);
 		
 		
+		JPanel resultPanel = new JPanel();
+				
+		calcResult = new JLabel("");
+		resultPanel.add(calcResult);
 		
+		
+		calcEarningsPanel.add(calcPanel,BorderLayout.NORTH);
+		calcEarningsPanel.add(resultPanel,BorderLayout.SOUTH);
 		
 		add(customersWindowPanel);
+		
 		
 		repaint();
 		setVisible(true);
@@ -172,21 +185,26 @@ public class GUI extends JFrame
 		remove(customersWindowPanel);
 		setSize(1600, 900);
 		setLocationRelativeTo(null);
-		setLayout(new GridLayout());
+		setLayout(new BorderLayout());
 		
-		add(stopAndStartButton);
-		add(nextButton);
+		JPanel restourantPanel = new JPanel();
+		restourantPanel.setLayout(new GridLayout());
 		
-		add(waitersPanel);
-		add(chefsPanel);
-		add(registersPanel);
+		JPanel buttonsPanel=new JPanel(new GridLayout(0,1));
+		buttonsPanel.add(stopAndStartButton);
+		buttonsPanel.add(nextButton);
+		
+		restourantPanel.add(waitersPanel);
+		restourantPanel.add(chefsPanel);
+		restourantPanel.add(registersPanel);
+		
+		add(buttonsPanel,BorderLayout.WEST);
+		add(restourantPanel,BorderLayout.CENTER);
 		
 		repaint();
 		setVisible(true);
 		repaint();
 	}
-	
-	
 	
 	public JButton getNextButton() {
 		return nextButton;

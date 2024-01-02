@@ -110,6 +110,7 @@ public class Main
 			
 			public void actionPerformed(ActionEvent e) {
 				calc.calculateEarning(Integer.valueOf(Interface.getCalcTimeTF().getText()), Integer.valueOf(Interface.getCalcCustomerTimeTF().getText()), Integer.valueOf(Interface.getCalcCustomersTF().getText()), Integer.valueOf(Interface.getCalcPriorityCustomersTF().getText()));
+				Interface.setCalcResultText("Kazanc = "+calc.getEarnings()+"  Masa = "+calc.getTableCount()+"  Garson = "+calc.getWaiterCount()+"  Asci = "+calc.getChefCount());
 				System.out.println("Kazanc = "+calc.getEarnings()+"  Masa = "+calc.getTableCount()+"  Garson = "+calc.getWaiterCount()+"  Asci = "+calc.getChefCount());
 			}
 		});
