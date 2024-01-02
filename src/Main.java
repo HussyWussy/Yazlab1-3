@@ -17,15 +17,12 @@ import javax.swing.JPanel;
 
 public class Main
 {
-	
 	public static void main(String args[]) throws InterruptedException, IOException 
 	{
 		
 		File log = new File("log.txt");
 		final FileWriter filewriter = new FileWriter(log);
 		final BufferedWriter bufferedwriter = new BufferedWriter(filewriter);
-		
-		
 		
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {

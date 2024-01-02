@@ -164,7 +164,7 @@ public class Calculator
 					bestchefcount = chefCount;
 				}
 				
-				for(int k = 1;k<Math.ceil(i/2)+1;k++)
+				for(int k = 1;k<Math.ceil(i /2)+1;k++)
 				{
 					chefCount = k;
 					int chefEarn = emulate();
